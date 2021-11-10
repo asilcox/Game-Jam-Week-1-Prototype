@@ -30,7 +30,7 @@ public class ScoreManager : MonoBehaviour
     }
 
     public void Update()
-    {
+    {   
         if (Input.GetKeyDown(KeyCode.Space))
         {
             AddPoint();
@@ -38,5 +38,8 @@ public class ScoreManager : MonoBehaviour
 
         if (score > highscore)
             highscoreText.text = "HIGHSCORE: " + score.ToString();
+
+        if (Input.GetKeyDown(KeyCode.Keypad0))
+            highscore = 0;
     }
 }
