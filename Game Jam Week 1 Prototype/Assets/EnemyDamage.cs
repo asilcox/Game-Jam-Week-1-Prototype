@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class EnemyDamage : MonoBehaviour
 {
@@ -12,12 +13,12 @@ public class EnemyDamage : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Keypad1))
         {
-            enemyHealth.DischargeEnemy(20);
+            enemyHealth.DischargeEnemy(20, new HashSet<GameObject>() );
         }
 
         if (Input.GetKeyDown(KeyCode.Keypad2))
         {
-            enemyHealth.ChargeEnemy(5);
+            enemyHealth.ChargeEnemy(5, new HashSet<GameObject>() );
         }
     }
 }
