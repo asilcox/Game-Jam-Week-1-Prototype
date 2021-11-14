@@ -25,6 +25,14 @@ public class @InputActions : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""Shooting"",
+                    ""type"": ""Button"",
+                    ""id"": ""9c3d8107-d212-44f1-9fac-2aa2a9c380de"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -82,6 +90,17 @@ public class @InputActions : IInputActionCollection, IDisposable
                     ""action"": ""Movement"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""655c0449-9437-4dd9-b6b2-c10ec946ff05"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Shooting"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -91,6 +110,7 @@ public class @InputActions : IInputActionCollection, IDisposable
         // Player
         m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
         m_Player_Movement = m_Player.FindAction("Movement", throwIfNotFound: true);
+        m_Player_Shooting = m_Player.FindAction("Shooting", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -141,11 +161,13 @@ public class @InputActions : IInputActionCollection, IDisposable
     private readonly InputActionMap m_Player;
     private IPlayerActions m_PlayerActionsCallbackInterface;
     private readonly InputAction m_Player_Movement;
+    private readonly InputAction m_Player_Shooting;
     public struct PlayerActions
     {
         private @InputActions m_Wrapper;
         public PlayerActions(@InputActions wrapper) { m_Wrapper = wrapper; }
         public InputAction @Movement => m_Wrapper.m_Player_Movement;
+        public InputAction @Shooting => m_Wrapper.m_Player_Shooting;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -158,6 +180,9 @@ public class @InputActions : IInputActionCollection, IDisposable
                 @Movement.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMovement;
                 @Movement.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMovement;
                 @Movement.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMovement;
+                @Shooting.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnShooting;
+                @Shooting.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnShooting;
+                @Shooting.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnShooting;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -165,6 +190,9 @@ public class @InputActions : IInputActionCollection, IDisposable
                 @Movement.started += instance.OnMovement;
                 @Movement.performed += instance.OnMovement;
                 @Movement.canceled += instance.OnMovement;
+                @Shooting.started += instance.OnShooting;
+                @Shooting.performed += instance.OnShooting;
+                @Shooting.canceled += instance.OnShooting;
             }
         }
     }
@@ -172,5 +200,6 @@ public class @InputActions : IInputActionCollection, IDisposable
     public interface IPlayerActions
     {
         void OnMovement(InputAction.CallbackContext context);
+        void OnShooting(InputAction.CallbackContext context);
     }
 }
