@@ -9,6 +9,8 @@ public class EnemyAI : MonoBehaviour
     public Transform target;
     public Transform enemyGfx;
 
+    public EnemyCharge ec;
+
     public Animator animator;
 
     public float speed = 200f;
@@ -26,6 +28,9 @@ public class EnemyAI : MonoBehaviour
     {
         seeker = GetComponent<Seeker>();
         rb = GetComponent<Rigidbody2D>();
+        ec = GetComponent<EnemyCharge>();
+
+        target = GameObject.FindGameObjectWithTag("Player").transform;
 
         InvokeRepeating("UpdatePath", 0f, .5f);
     }
@@ -42,6 +47,15 @@ public class EnemyAI : MonoBehaviour
         {
             path = p;
             currentWaypoint = 0;
+        }
+    }
+
+    private void Update()
+    {
+        speed = ec.currentCharge * 2000.0f * Time.deltaTime;
+        if (speed < 200.0f)
+        {
+            speed = 200.0f;
         }
     }
 

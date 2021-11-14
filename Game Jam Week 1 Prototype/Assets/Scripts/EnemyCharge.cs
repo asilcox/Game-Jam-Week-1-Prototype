@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class EnemyCharge : MonoBehaviour
 {
-    public int currentCharge;
-    public int overchargeMax;
-    public int maxCharge;
+    public float currentCharge;
+    public float overchargeMax;
+    public float maxCharge;
 
     public GameObject DischargeArea;
     public GameObject EnemyGfx;
@@ -16,13 +16,14 @@ public class EnemyCharge : MonoBehaviour
 
     private bool hasBeenDischarged = false;
     private bool hasBeenCharged = false;
+    private bool startedCoroutine = false;
 
-    public float maxDistance = 5.0f;
+    public float maxDistance = 1.0f;
 
     // Start is called before the first frame update
     void Start()
     {
-        currentCharge = maxCharge;
+        currentCharge = 1.0f;
     }
 
     // Update is called once per frame
@@ -39,18 +40,20 @@ public class EnemyCharge : MonoBehaviour
     /// if the enemy becomes overcharged.
     /// </summary>
     /// <param name="chargeAmount"></param>
-    public void ChargeEnemy(int chargeAmount)
+    public void ChargeEnemy(float chargeAmount, HashSet<GameObject> targets)
     {
         GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
 
-        int nextChargeAmount = currentCharge + chargeAmount;
+        float nextChargeAmount = currentCharge + chargeAmount;
 
         if( nextChargeAmount > maxCharge)
         {
             if (nextChargeAmount > maxCharge + overchargeMax)
             {
-                // Set currentCharge to the maximum charge with overcharge max included
-                currentCharge = maxCharge + overchargeMax;
+
+                isDestroyed = true;
+                
+                // currentCharge = maxCharge + overchargeMax;
             }
             else
             {
@@ -62,7 +65,11 @@ public class EnemyCharge : MonoBehaviour
             isOvercharged = true;
 
             // Steadily decrement overcharge amount until we reach again max charge
-            StartCoroutine(DecrementChargeAmount());
+            if (!startedCoroutine)
+            {
+                startedCoroutine = true;
+                StartCoroutine(DecrementChargeAmount(gameObject));
+            }
         } else
         {
             // We're not overcharged, so simply increment the current charge by charge amount
@@ -78,12 +85,16 @@ public class EnemyCharge : MonoBehaviour
         {
             EnemyCharge ec = enemy.GetComponent<EnemyCharge>();
 
-            if (enemy != this && ec.hasBeenCharged == false)
+            if (enemy != this) //&& ec.hasBeenCharged == false)
             {
                 float distance = Vector2.Distance(enemy.transform.position, this.transform.position);
                 if (distance < maxDistance)
                 {
-                    ec.ChargeEnemy(chargeAmount);
+                    if (!targets.Contains(enemy))
+                    {
+                        targets.Add(enemy);
+                        ec.ChargeEnemy(chargeAmount, targets);
+                    }
                 }
             }
         }
@@ -93,20 +104,22 @@ public class EnemyCharge : MonoBehaviour
     /// A Coroutine that randomly decrements the currentCharge everyone second while currentCharge exceeds maxCharge.
     /// </summary>
     /// <returns></returns>
-    public IEnumerator DecrementChargeAmount()
+    public IEnumerator DecrementChargeAmount(GameObject go)
     {
-        while (currentCharge > maxCharge)
+        EnemyCharge ec = go.GetComponent<EnemyCharge>();
+        while (ec.currentCharge > 1.0f)
         {
-            yield return new WaitForSeconds(1f);
-            currentCharge -= Random.Range(1, 3);
+            ec.currentCharge -= Random.Range(3.0f, 5.0f);
+            yield return new WaitForSeconds(1.0f);
         }
+        ec.startedCoroutine = false;
     }
 
     /// <summary>
     /// Discharges electricity from the enemy 
     /// </summary>
     /// <param name="chargeAmount"></param>
-    public void DischargeEnemy(int chargeAmount)
+    public void DischargeEnemy(float chargeAmount, HashSet<GameObject> targets)
     {
         GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
 
@@ -126,13 +139,20 @@ public class EnemyCharge : MonoBehaviour
         foreach (var enemy in enemies)
         {
             EnemyCharge ec = enemy.GetComponent<EnemyCharge>();
-            
-            if (enemy != this && ec.hasBeenDischarged == false)
+
+            if (enemy != this) //&& ec.hasBeenDischarged == false)
             {
-                float distance = Vector2.Distance(enemy.transform.position, this.transform.position);
-                if (distance < maxDistance)
+                if (enemy != null)
                 {
-                    ec.DischargeEnemy(chargeAmount);
+                    float distance = Vector2.Distance(enemy.transform.position, this.transform.position);
+                    if (distance < maxDistance)
+                    {
+                        if (!targets.Contains(enemy))
+                        {
+                            targets.Add(enemy);
+                            ec.DischargeEnemy(chargeAmount, targets);
+                        }
+                    }
                 }
             }
         }
