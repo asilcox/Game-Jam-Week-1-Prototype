@@ -9,6 +9,8 @@ public class EnemyAI : MonoBehaviour
     public Transform target;
     public Transform enemyGfx;
 
+    private GameObject player;
+
     public EnemyCharge ec;
 
     public Animator animator;
@@ -31,6 +33,9 @@ public class EnemyAI : MonoBehaviour
         ec = GetComponent<EnemyCharge>();
 
         target = GameObject.FindGameObjectWithTag("Player").transform;
+
+        player = GameObject.FindGameObjectWithTag("Player");
+
 
         InvokeRepeating("UpdatePath", 0f, .5f);
     }
@@ -63,6 +68,8 @@ public class EnemyAI : MonoBehaviour
     {
         animator.SetBool("EnemyIsRunning", false);
         animator.SetBool("EnemyIsAttacking", true);
+
+        player.GetComponent<Health>().SetHealth(player.GetComponent<Health>().GetHealth() - 20);
     }
 
     void FixedUpdate()
