@@ -7,7 +7,7 @@ public class EnemySpawner : MonoBehaviour
     [SerializeField]
     private GameObject enemyPrefab;
 
-    private int maxEnemies = 16;
+    private int maxEnemies = 10;
 
     // Start is called before the first frame update
     void Start()
@@ -19,7 +19,7 @@ public class EnemySpawner : MonoBehaviour
     {
         while (true)
         {
-            yield return new WaitForSeconds(Random.Range(0.5f, 2.0f));
+            yield return new WaitForSeconds(Random.Range(1.0f, 3.0f));
 
             GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
 
