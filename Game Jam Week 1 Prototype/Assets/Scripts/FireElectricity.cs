@@ -24,9 +24,13 @@ public class FireElectricity : MonoBehaviour
     private ParticleSystem.Particle[] m_Particles;
     private Color color = new Color(0.0f, 0.894f, 1.0f);
 
+    private bool audioPlaying = false;
+    private AudioSource auSource;
+
     void Start()
     {
         pMain = ps.main;
+        auSource = gameObject.GetComponent<AudioSource>();
     }
 
     public void HandleShooting(InputAction.CallbackContext ctx)
@@ -40,6 +44,11 @@ public class FireElectricity : MonoBehaviour
         //if (Input.GetButtonDown("Fire1"))
         if (m_bFire)
         {
+            if (!audioPlaying)
+            {
+                audioPlaying = true;
+                auSource.Play();
+            }
             Vector3 worldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             Debug.DrawLine(electricityOrigin.transform.position, worldPosition, color, 1, false);
             float dist = Vector3.Distance(electricityOrigin.transform.position, worldPosition);
@@ -75,6 +84,8 @@ public class FireElectricity : MonoBehaviour
         else
         {
             m_bPlaying = false;
+            auSource.Stop();
+            audioPlaying = false;
             ps.Stop();
         }
         if (Input.GetButtonUp("Fire1"))

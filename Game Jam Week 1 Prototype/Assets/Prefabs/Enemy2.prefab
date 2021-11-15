@@ -570,6 +570,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   target: {fileID: 0}
   enemyGfx: {fileID: 3020868486593360789}
+  ec: {fileID: 0}
   animator: {fileID: 3020868486593360791}
   speed: 200
   nextWaypointDistance: 3
@@ -640,6 +641,7 @@ MonoBehaviour:
   DischargeArea: {fileID: 0}
   EnemyGfx: {fileID: 3020868486593360788}
   maxDistance: 5
+  canvas: {fileID: 3185604740397909501, guid: aca34e3e3ba02a644abce384545b0e6b, type: 3}
 --- !u!114 &2096941534
 MonoBehaviour:
   m_ObjectHideFlags: 0

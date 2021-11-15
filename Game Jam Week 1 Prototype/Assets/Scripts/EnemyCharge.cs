@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class EnemyCharge : MonoBehaviour
 {
@@ -20,6 +21,8 @@ public class EnemyCharge : MonoBehaviour
 
     public float maxDistance = 1.0f;
 
+    public Canvas canvas;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -31,6 +34,11 @@ public class EnemyCharge : MonoBehaviour
     {
         if(isDestroyed)
         {
+            GameObject go = GameObject.FindGameObjectWithTag("Score");
+            Text text = go.GetComponent<Text>();
+            int score = int.Parse(text.text);
+            score += 10;
+            text.text = score.ToString();
             Destroy(gameObject);
         }
     }
