@@ -69,7 +69,7 @@ public class EnemyAI : MonoBehaviour
         animator.SetBool("EnemyIsRunning", false);
         animator.SetBool("EnemyIsAttacking", true);
 
-        player.GetComponent<Health>().SetHealth(player.GetComponent<Health>().GetHealth() - 20);
+        player.GetComponent<Health>().SetHealth(player.GetComponent<Health>().GetHealth() - (0.5f * Time.deltaTime));
     }
 
     void FixedUpdate()

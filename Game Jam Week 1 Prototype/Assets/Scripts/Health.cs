@@ -3,21 +3,29 @@ using UnityEngine;
 public class Health : MonoBehaviour
 {
     [SerializeField]
-    private int maxHealth = 100;
+    private float maxHealth = 100.0f;
     [SerializeField]
-    private int currentHealth;
+    private float currentHealth;
 
     void Start()
     {
         currentHealth = maxHealth;
     }
 
-    public int GetHealth()
+    private void Update()
+    {
+        if(currentHealth <= 0)
+        {
+            Destroy(gameObject);
+        }
+    }
+
+    public float GetHealth()
     {
         return currentHealth;
     }
 
-    public void SetHealth(int h)
+    public void SetHealth(float h)
     {
         currentHealth = h;
     }
